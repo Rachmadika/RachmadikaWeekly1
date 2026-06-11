@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE php>
+<php lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,22 +13,38 @@
     <h2>
     <table border="1" align="center" cellspacing="0" cellpadding="100px">
         <tr>
-            <td><a href="index.html">Rumah</a></td>
-            <td><a href="profil.html">Profil</a></td>
-            <td><a href="kontak.html">Kontak</a></td>
-            <td><a href="mahasiswa.html">Data Mahasiswa</a></td>
+            <td><a href="index.php">Rumah</a></td>
+            <td><a href="profil.php">Profil</a></td>
+            <td><a href="kontak.php">Kontak</a></td>
+            <td><a href="mahasiswa.php">Data Mahasiswa</a></td>
         </tr>
     </table>
     <br> <br>
     </h2> Data Mahasiswa </h2>
+    <a href="tambahdata.php"><button>Tambah Data</button><a>
     <table border="1" cellspacing="5px">
          <tr>
-            <td>Baris 1, kolom 1</td>
-            <td colspan="2">Baris 2, Kolom 2</td>
+            <th>No</th>
+            <th>Nama</th>
+            <th>NIM</th>
+            <th>Program Studi</th>
+            <th>Email</th>
+            <th>Nomor Whatsapp</th>
+            <th>Foto</th>
+            <th>Aksi</th>
          </tr>
          <tr>
-            <td>Baris 2, Kolom 1</td>
-            <td>Baris 2, Kolom 2</td>
+            <th>1</th>
+            <th>Rachmadika</th>
+            <th>13242520055</th>
+            <th>Teknologi Informasi Dan Digital</th>
+            <th>rizaqif52@gmail.com</th>
+            <th>085801307912</th>
+            <th><img src="images.jpeg" width="90px" align="center" ></th>
+            <td>
+                <a href="editdata.php"><button>edit</button></a> 
+                <a href="editdata.php"><button>hapus</button></a>
+            </td>
          </tr>
          <tr>
                 <td>baris 2, kolom 1</td>
@@ -68,4 +84,4 @@
         </table>
     
 </body>
-</html>
+</php>
