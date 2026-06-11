@@ -55,8 +55,9 @@
 
         </table>
         <br><br>
-        <h2>Data Mahasiswa</h2>
-        <table border="1" cellpadding="5px">
+        <h2 align="center">
+            Data Mahasiswa</h2>
+        <table border="1" align="center" cellpadding="100px">
             <tr>
                 <td>1,1</td>
                 <td>1,2</td>
