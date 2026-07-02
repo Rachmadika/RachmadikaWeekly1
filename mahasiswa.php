@@ -59,9 +59,12 @@
             <td><?= $mhs["no_hp"] ?></td>
             <td align="center"><img src="images.jpeg" width="90px"></td>
             <td align="center">
-                <a href="editdata.php"><button>edit</button></a> 
-                <a href="hapusdata.php"><button>hapus</button></a>
-            </td>
+    <a href="editdata.php"><button>edit</button></a> 
+    
+    <a href="hapusdata.php?id=<?= $mhs["id"] ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+        <button>hapus</button>
+    </a>
+</td>
         </tr>
         <?php
                 $no++;

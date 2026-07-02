@@ -19,4 +19,17 @@ function tampildata($query)
     return $rows;
 }
 
+// ... kode fungsi tampildata yang sudah ada sebelumnya ...
+
+function hapus($id) 
+{
+    global $koneksi;
+    
+    // Perintah untuk menghapus data berdasarkan ID
+    mysqli_query($koneksi, "DELETE FROM mahasiswa WHERE id = '$id'");
+    
+    // Mengembalikan angka > 0 jika ada data yang berhasil dihapus
+    return mysqli_affected_rows($koneksi);
+}
+
 ?>
