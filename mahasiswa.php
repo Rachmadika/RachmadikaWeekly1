@@ -17,7 +17,7 @@
 </head>
 <body>
 
-    <h1 align="center">Selamat Datang Di My Website</h1>
+    <h1 align="center">My Website Loh Yahh</h1>
     
     <table border="1" align="center" cellspacing="0" cellpadding="10px">
         <tr>
