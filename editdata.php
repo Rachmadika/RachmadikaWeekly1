@@ -451,9 +451,10 @@ if (isset($_POST["submit"])) {
 <!-- ====== FORM SECTION ====== -->
 <section class="form-section">
   <div class="form-card reveal">
-    <form action="" method="post">
-      <!-- Hidden ID input -->
+    <form action="" method="post" enctype="multipart/form-data">
+      <!-- Hidden ID and Old Photo inputs -->
       <input type="hidden" name="id" value="<?= htmlspecialchars($mhs["id"]) ?>">
+      <input type="hidden" name="fotoLama" value="<?= htmlspecialchars($mhs["foto"]) ?>">
       
       <div class="form-group">
         <label for="nama">Nama Lengkap *</label>
@@ -478,6 +479,31 @@ if (isset($_POST["submit"])) {
       <div class="form-group">
         <label for="no_hp">Nomor WhatsApp *</label>
         <input type="text" name="no_hp" id="no_hp" class="form-control" value="<?= htmlspecialchars($mhs["no_hp"]) ?>" required autocomplete="off">
+      </div>
+
+      <div class="form-group" style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+        <div>
+          <label style="display: block; margin-bottom: 8px;">Foto Saat Ini</label>
+          <div style="width: 64px; height: 64px; border-radius: 50%; overflow: hidden; border: 2px solid var(--sage-light); box-shadow: 0 4px 10px rgba(63, 82, 51, 0.12);">
+            <?php
+              $current_foto = 'images.jpeg';
+              if (!empty($mhs["foto"])) {
+                  if (file_exists('img/' . $mhs["foto"])) {
+                      $current_foto = 'img/' . $mhs["foto"];
+                  } elseif (file_exists($mhs["foto"])) {
+                      $current_foto = $mhs["foto"];
+                  } else {
+                      $current_foto = 'img/' . $mhs["foto"];
+                  }
+              }
+            ?>
+            <img src="<?= $current_foto ?>" alt="Foto" onerror="this.src='images.jpeg'" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+        <div style="flex: 1;">
+          <label for="foto">Unggah Foto Baru (Biarkan kosong untuk mempertahankan foto lama)</label>
+          <input type="file" name="foto" id="foto" class="form-control" accept="image/jpeg, image/png, image/webp">
+        </div>
       </div>
       
       <div class="btn-group">

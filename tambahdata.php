@@ -428,7 +428,7 @@ if (isset($_POST["submit"])) {
 <!-- ====== FORM SECTION ====== -->
 <section class="form-section">
   <div class="form-card reveal">
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="nama">Nama Lengkap *</label>
         <input type="text" name="nama" id="nama" class="form-control" placeholder="Masukkan nama lengkap" required autocomplete="off">
@@ -452,6 +452,11 @@ if (isset($_POST["submit"])) {
       <div class="form-group">
         <label for="no_hp">Nomor WhatsApp *</label>
         <input type="text" name="no_hp" id="no_hp" class="form-control" placeholder="Contoh: 085801307912" required autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label for="foto">Foto Profil *</label>
+        <input type="file" name="foto" id="foto" class="form-control" accept="image/jpeg, image/png, image/webp" required>
       </div>
       
       <div class="btn-group">

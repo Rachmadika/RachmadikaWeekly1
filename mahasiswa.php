@@ -566,7 +566,16 @@
           <?php
               $no = 1;
               foreach($mahasiswas as $mhs) {
-                  $foto = !empty($mhs["foto"]) ? htmlspecialchars($mhs["foto"]) : 'images.jpeg';
+                  $foto = 'images.jpeg';
+                  if (!empty($mhs["foto"])) {
+                      if (file_exists('img/' . $mhs["foto"])) {
+                          $foto = 'img/' . $mhs["foto"];
+                      } elseif (file_exists($mhs["foto"])) {
+                          $foto = $mhs["foto"];
+                      } else {
+                          $foto = 'img/' . $mhs["foto"];
+                      }
+                  }
           ?>
           <tr>
             <td style="text-align: center; font-weight: 700; color: var(--sage-deep);"><?= $no ?></td>
