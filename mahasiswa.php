@@ -658,10 +658,19 @@
     </div>
     <div class="footer-col">
       <h4>Sosial</h4>
-      <a href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
-      <a href="#"><i class="fa-brands fa-github"></i> GitHub</a>
-      <a href="#"><i class="fa-brands fa-youtube"></i> YouTube</a>
-      <a href="#"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+      <a href="https://www.instagram.com/rrachmadika/" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-instagram"></i> Instagram
+      </a>
+      <a href="https://github.com/Rachmadika" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-github"></i> GitHub
+      </a>
+      <a href="https://www.youtube.com/@mrizaqirachmatd4090" target="_blank" rel="noopener noreferrer">
+        <i class="fa-brands fa-youtube"></i> YouTube
+      </a>
+      <!-- LinkedIn is explicitly excluded/deferred per project requirement -->
+      <a href="javascript:void(0);" style="opacity: 0.4; cursor: default;" title="Segera Hadir">
+        <i class="fa-brands fa-linkedin"></i> LinkedIn
+      </a>
     </div>
   </div>
   <div class="footer-bottom">
