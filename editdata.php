@@ -1,17 +1,57 @@
 <?php
-    // Memanggil file fungsi
-    require 'fungsi.php';
+require 'fungsi.php';
 
-    // Mengambil data dari database
-    $query = "SELECT * FROM mahasiswa";
-    $mahasiswas = tampildata($query); // wadah isi data
+// Ambil ID dari URL
+$id = $_GET["id"] ?? null;
+if (!$id) {
+    echo "
+        <script>
+            alert('ID mahasiswa tidak ditemukan!');
+            document.location.href = 'mahasiswa.php';
+        </script>
+    ";
+    exit;
+}
+
+// Query data mahasiswa berdasarkan ID
+$mhs = tampildata("SELECT * FROM mahasiswa WHERE id = '$id'");
+if (empty($mhs)) {
+    echo "
+        <script>
+            alert('Data mahasiswa tidak ditemukan!');
+            document.location.href = 'mahasiswa.php';
+        </script>
+    ";
+    exit;
+}
+$mhs = $mhs[0];
+
+// Cek apakah tombol submit sudah ditekan
+if (isset($_POST["submit"])) {
+    // Jalankan fungsi ubah(), jika sukses (mengembalikan >= 0) redirect ke mahasiswa.php
+    if (ubah($_POST) >= 0) {
+        echo "
+            <script>
+                alert('Data berhasil diperbarui!');
+                document.location.href = 'mahasiswa.php';
+            </script>
+        ";
+    } else {
+        echo "
+            <script>
+                alert('Data gagal diperbarui!');
+                document.location.href = 'mahasiswa.php';
+            </script>
+        ";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Mahasiswa - Web TI 2025</title>
+<title>Edit Data Mahasiswa - Web TI 2025</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&display=swap" rel="stylesheet">
@@ -139,7 +179,7 @@
   /* ====== PAGE HERO ====== */
   .page-hero {
     position: relative;
-    padding: 160px 32px 80px;
+    padding: 160px 32px 60px;
     overflow: hidden;
     background: linear-gradient(180deg, var(--sage-mist) 0%, rgba(238, 242, 226, 0.4) 100%);
     text-align: center;
@@ -177,7 +217,7 @@
     font-weight: 600;
     color: var(--sage-deep);
     box-shadow: var(--shadow-soft);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .badge .dot {
     width: 8px; height: 8px;
@@ -193,12 +233,12 @@
 
   .page-hero h1 {
     font-family: 'Fraunces', serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
     line-height: 1.1;
     font-weight: 800;
     letter-spacing: -.02em;
     color: var(--sage-ink);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
   .page-hero h1 em {
     font-style: italic;
@@ -208,207 +248,83 @@
     -webkit-text-fill-color: transparent;
     font-weight: 900;
   }
-  .page-hero p {
-    font-size: 17px;
-    color: var(--muted);
-    max-width: 600px;
+
+  /* ====== FORM SECTION ====== */
+  .form-section {
+    padding: 40px 32px 100px;
+    max-width: 720px;
     margin: 0 auto;
+  }
+  .form-card {
+    background: var(--white);
+    padding: 44px;
+    border-radius: 24px;
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(159, 176, 124, 0.15);
+  }
+  .form-group {
+    margin-bottom: 24px;
+  }
+  .form-group label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--sage-dark);
+    margin-bottom: 8px;
+  }
+  .form-control {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1.5px solid var(--sage-pale);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    background: var(--cream);
+    color: var(--sage-ink);
+    transition: all 0.3s ease;
+  }
+  .form-control:focus {
+    outline: none;
+    border-color: var(--sage-deep);
+    background: var(--white);
+    box-shadow: 0 0 0 4px rgba(107, 132, 84, 0.15);
   }
 
-  /* ====== DASHBOARD SECTION ====== */
-  .dashboard-section {
-    padding: 80px 32px;
-    max-width: 1240px;
-    margin: 0 auto;
-  }
-  .data-card {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 40px;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(159, 176, 124, 0.12);
-    margin-bottom: 50px;
-  }
-  .card-header {
+  /* Buttons */
+  .btn-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 30px;
+    gap: 12px;
+    margin-top: 32px;
   }
-  .card-title-group h3 {
-    font-family: 'Fraunces', serif;
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--sage-ink);
-  }
-  .card-title-group p {
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-  
   .btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 24px;
-    border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 26px;
+    border-radius: 14px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
     text-decoration: none;
     transition: all .3s cubic-bezier(.4,0,.2,1);
     cursor: pointer;
     border: none;
+    flex: 1;
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--sage-deep), var(--sage-dark));
     color: var(--cream);
-    box-shadow: 0 10px 20px -8px rgba(63, 82, 51, 0.5);
+    box-shadow: 0 10px 24px -8px rgba(63, 82, 51, 0.5);
   }
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 24px -8px rgba(63, 82, 51, 0.6);
+    box-shadow: 0 14px 28px -8px rgba(63, 82, 51, 0.6);
   }
-
-  /* ====== TABLE STYLING ====== */
-  .table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    border-radius: 16px;
-    border: 1px solid var(--sage-pale);
-    box-shadow: 0 4px 15px rgba(63, 82, 51, 0.03);
-  }
-  .table-premium {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
+  .btn-ghost {
     background: var(--white);
+    color: var(--sage-dark);
+    border: 1.5px solid var(--sage-pale);
   }
-  .table-premium th {
-    background: linear-gradient(135deg, var(--sage-deep), var(--sage-dark));
-    color: var(--cream);
-    padding: 18px 20px;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .table-premium td {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--sage-pale);
-    color: var(--sage-ink);
-    font-size: 14.5px;
-    vertical-align: middle;
-  }
-  .table-premium tr:last-child td {
-    border-bottom: none;
-  }
-  .table-premium tbody tr {
-    transition: background-color 0.2s ease;
-  }
-  .table-premium tbody tr:hover {
-    background-color: rgba(221, 230, 200, 0.2);
-  }
-
-  /* Avatar Circle */
-  .avatar-box {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid var(--sage-light);
-    box-shadow: 0 4px 10px rgba(63, 82, 51, 0.12);
-    display: inline-block;
-  }
-  .avatar-box img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Pill badges */
-  .badge-prodi {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
+  .btn-ghost:hover {
     background: var(--sage-pale);
-    color: var(--sage-dark);
-    border: 1px solid rgba(107, 132, 84, 0.15);
-  }
-
-  /* Action Buttons */
-  .btn-action-group {
-    display: flex;
-    gap: 8px;
-  }
-  .btn-sm {
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-  }
-  .btn-edit {
-    background: var(--sage-pale);
-    color: var(--sage-dark);
-  }
-  .btn-edit:hover {
-    background: var(--sage-light);
     transform: translateY(-2px);
-  }
-  .btn-delete {
-    background: #fdf2f2;
-    color: #d9534f;
-    border: 1px solid #f5c2c2;
-  }
-  .btn-delete:hover {
-    background: #d9534f;
-    color: var(--white);
-    transform: translateY(-2px);
-  }
-
-  /* ====== PRACTICE SECTION ====== */
-  .practice-card {
-    background: var(--white);
-    border-radius: 24px;
-    padding: 40px;
-    box-shadow: var(--shadow-soft);
-    border: 1px solid rgba(159, 176, 124, 0.12);
-  }
-  .practice-title {
-    font-family: 'Fraunces', serif;
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--sage-ink);
-    margin-bottom: 24px;
-    text-align: center;
-  }
-  .practice-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--cream);
-    border: 2px solid var(--sage-mid);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .practice-table td {
-    padding: 20px;
-    border: 1.5px solid var(--sage-light);
-    text-align: center;
-    font-size: 14.5px;
-    font-weight: 600;
-    color: var(--sage-dark);
-  }
-  .practice-table tr:hover {
-    background: var(--sage-mist);
   }
 
   /* ====== FOOTER ====== */
@@ -488,10 +404,9 @@
     .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
     .nav-links a { width: 100%; }
     .menu-toggle { display: grid; place-items: center; }
-    .page-hero { padding: 120px 20px 60px; }
-    .data-card, .practice-card { padding: 30px 18px; }
-    .card-header { flex-direction: column; align-items: stretch; }
-    .btn-primary { justify-content: center; }
+    .page-hero { padding: 120px 20px 50px; }
+    .form-card { padding: 30px 20px; }
+    .btn-group { flex-direction: column; }
     .footer-inner { grid-template-columns: 1fr; gap: 30px; }
   }
 
@@ -528,108 +443,52 @@
     <span class="blob blob-2"></span>
   </div>
   <div class="page-hero-inner reveal">
-    <span class="badge"><span class="dot"></span> Database Akademik</span>
-    <h1>Daftar Mahasiswa<br><em>Teknologi Informasi</em></h1>
-    <p>Manajemen database terpadu mahasiswa aktif program studi Teknologi Informasi Angkatan 2025.</p>
+    <span class="badge"><span class="dot"></span> Update Modul</span>
+    <h1>Edit Data <em>Mahasiswa</em></h1>
   </div>
 </section>
 
-<!-- ====== DASHBOARD SECTION ====== -->
-<section class="dashboard-section">
-  <!-- Data Table Card -->
-  <div class="data-card reveal">
-    <div class="card-header">
-      <div class="card-title-group">
-        <h3>Tabel Data Mahasiswa</h3>
-        <p>Menampilkan seluruh rekaman data mahasiswa yang tersimpan di sistem.</p>
+<!-- ====== FORM SECTION ====== -->
+<section class="form-section">
+  <div class="form-card reveal">
+    <form action="" method="post">
+      <!-- Hidden ID input -->
+      <input type="hidden" name="id" value="<?= htmlspecialchars($mhs["id"]) ?>">
+      
+      <div class="form-group">
+        <label for="nama">Nama Lengkap *</label>
+        <input type="text" name="nama" id="nama" class="form-control" value="<?= htmlspecialchars($mhs["nama"]) ?>" required autocomplete="off">
       </div>
-      <a href="tambahdata.php" class="btn btn-primary">
-        <i class="fa-solid fa-plus"></i> Tambah Data
-      </a>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="table-premium">
-        <thead>
-          <tr>
-            <th style="width: 60px; text-align: center;">No</th>
-            <th>Nama Lengkap</th>
-            <th>NIM</th>
-            <th>Program Studi</th>
-            <th>Surel / Email</th>
-            <th>Nomor Whatsapp</th>
-            <th style="text-align: center; width: 100px;">Foto</th>
-            <th style="text-align: center; width: 180px;">Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-              $no = 1;
-              foreach($mahasiswas as $mhs) {
-                  $foto = !empty($mhs["foto"]) ? htmlspecialchars($mhs["foto"]) : 'images.jpeg';
-          ?>
-          <tr>
-            <td style="text-align: center; font-weight: 700; color: var(--sage-deep);"><?= $no ?></td>
-            <td style="font-weight: 600;"><?= htmlspecialchars($mhs["nama"]) ?></td>
-            <td style="font-family: monospace; font-size: 13.5px;"><?= htmlspecialchars($mhs["nim"]) ?></td>
-            <td><span class="badge-prodi"><?= htmlspecialchars($mhs["prodi"]) ?></span></td>
-            <td style="font-size: 13.5px;"><?= htmlspecialchars($mhs["email"]) ?></td>
-            <td style="font-size: 13.5px;"><?= htmlspecialchars($mhs["no_hp"]) ?></td>
-            <td style="text-align: center;">
-              <div class="avatar-box">
-                <img src="<?= $foto ?>" alt="Foto <?= htmlspecialchars($mhs["nama"]) ?>" onerror="this.src='images.jpeg'">
-              </div>
-            </td>
-            <td style="text-align: center;">
-              <div class="btn-action-group">
-                <a href="editdata.php?id=<?= $mhs["id"] ?>" class="btn-sm btn-edit">
-                  <i class="fa-solid fa-pen-to-square"></i> Edit
-                </a> 
-                <a href="hapusdata.php?id=<?= $mhs["id"] ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');" class="btn-sm btn-delete">
-                  <i class="fa-solid fa-trash-can"></i> Hapus
-                </a>
-              </div>
-            </td>
-          </tr>
-          <?php
-                  $no++;
-              }
-          ?>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- HTML Table Practice Card -->
-  <div class="practice-card reveal">
-    <h3 class="practice-title">Latihan Tabel HTML</h3>
-    <div class="table-responsive">
-      <table class="practice-table">
-        <tr>
-          <td>1,1</td>
-          <td>1,2</td>
-          <td>1,3</td>
-          <td>1,4</td>
-        </tr>
-        <tr>
-          <td>2,1</td>
-          <td rowspan="2" colspan="2" style="background: rgba(107, 132, 84, 0.08); font-family: 'Fraunces', serif; color: var(--sage-deep); font-size: 16px;">
-            Gabungan Baris & Kolom
-          </td>
-          <td>2,4</td>
-        </tr>
-        <tr>
-          <td>3,1</td>
-          <td>3,4</td>
-        </tr>
-        <tr>
-          <td>4,1</td>
-          <td>4,2</td>
-          <td>4,3</td>
-          <td>4,4</td>
-        </tr>
-      </table>
-    </div>
+      
+      <div class="form-group">
+        <label for="nim">Nomor Induk Mahasiswa (NIM) *</label>
+        <input type="text" name="nim" id="nim" class="form-control" value="<?= htmlspecialchars($mhs["nim"]) ?>" required autocomplete="off">
+      </div>
+      
+      <div class="form-group">
+        <label for="prodi">Program Studi *</label>
+        <input type="text" name="prodi" id="prodi" class="form-control" value="<?= htmlspecialchars($mhs["prodi"]) ?>" required autocomplete="off">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Alamat Email *</label>
+        <input type="email" name="email" id="email" class="form-control" value="<?= htmlspecialchars($mhs["email"]) ?>" required autocomplete="off">
+      </div>
+      
+      <div class="form-group">
+        <label for="no_hp">Nomor WhatsApp *</label>
+        <input type="text" name="no_hp" id="no_hp" class="form-control" value="<?= htmlspecialchars($mhs["no_hp"]) ?>" required autocomplete="off">
+      </div>
+      
+      <div class="btn-group">
+        <a href="mahasiswa.php" class="btn btn-ghost">
+          <i class="fa-solid fa-arrow-left"></i> Batal
+        </a>
+        <button type="submit" name="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin memperbarui data ini?');">
+          <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+        </button>
+      </div>
+    </form>
   </div>
 </section>
 

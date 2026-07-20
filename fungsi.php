@@ -56,4 +56,30 @@ function tambah($data) {
     // Kembalikan angka jumlah baris yang terpengaruh (jika sukses = 1, jika gagal = -1 / 0)
     return mysqli_affected_rows($koneksi);
 }
+
+function ubah($data) {
+    global $koneksi;
+
+    // Sanitize and capture input data, including the mandatory hidden ID field
+    $id    = htmlspecialchars($data["id"]);
+    $nama  = htmlspecialchars($data["nama"]);
+    $nim   = htmlspecialchars($data["nim"]);
+    $prodi = htmlspecialchars($data["prodi"]);
+    $email = htmlspecialchars($data["email"]);
+    $no_hp = htmlspecialchars($data["no_hp"]);
+
+    // Execute SQL Update query (excluding photo field as per project scope)
+    $query = "UPDATE mahasiswa SET 
+                nama = '$nama',
+                nim = '$nim',
+                prodi = '$prodi',
+                email = '$email',
+                no_hp = '$no_hp'
+              WHERE id = '$id'";
+
+    mysqli_query($koneksi,$query);
+
+    // Return affected rows
+    return mysqli_affected_rows($koneksi);
+}
 ?>
